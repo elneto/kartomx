@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/raphael-min.js"></script>
+        <script src="js/kartograph.min.js"></script>
+        <style type="text/css">
+
+        #map{
+        	width: 900px;
+        }
+
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script type="text/javascript">
+        	var map = $K.map('#map');
+        	map.loadMap('mex.svg', function() {
+			    // do something with your map, add layers etc.
+			    map.addLayer('layer0', {
+			        styles: {
+			            stroke: '#aaa',
+			            fill: '#f6f4f2'
+			        }
+				}
+
+			)});
+        </script>
+    </body>
+</html>
