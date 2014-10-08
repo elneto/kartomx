@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/raphael-min.js"></script>
+        <script src="js/kartograph.min.js"></script>
+        <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
+		<script type="text/javascript" src="js/chroma.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/jquery.qtip.css">
+        <style type="text/css">
+
+        #map{
+        	width: 800px;
+        }
+
+        .mapnail {
+    		display: inline-block;
+    		width: 70%;
+		}
+
+        </style>
+    </head>
+    <body>
+        
+
+<script type="text/javascript">
+
+    $(function() {
+        var map,
+            colorscale,
+            departments = {},
+            w = $('#map').parent().width();
+
+        // initialize qtip tooltip class
+        $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
+        $.fn.qtip.defaults.style.def = false;
+
+        $.getJSON('departments.json', function(departments) {
+
+            $.get('france-departments.svg', function(svg) {
+
+                $(function(brewer) {
+
+                    var div = $('<div />').addClass('mapnail');
+                    $('#map').append(div);
+
+                    var colHi = chroma.hex("rgb(72,27,24)"),
+                        colLow = chroma.hex("#ebe6e5");
+
+                    var map = kartograph.map(div),
+                        color = chroma.scale([colLow, colHi]).domain(departments, 6, 'quantiles', 'density');
+
+                    map.setMap(svg);
+
+                    map.addLayer('departments', {
+                        styles: {
+                            'stroke-width': 0.7,
+                            fill: function(d) { return color(departments[d.id].density); },
+                            stroke: function(d) { return color(departments[d.id].density).darker(); }
+                        },
+                        tooltips: function(d) {
+                            return [d.name, departments[d.id].density + '/km<sup>2</sup>'];
+                        }
+                    });
+
+                });
+
+            });
+        });
+
+    });
+
+</script>
+
+<div id="map">&nbsp;</div>
+
+    </body>
+</html>
